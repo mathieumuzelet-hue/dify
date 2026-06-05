@@ -407,6 +407,13 @@ services:
       ENABLE_WEBSITE_JINAREADER: ${ENABLE_WEBSITE_JINAREADER:-true}
       ENABLE_WEBSITE_FIRECRAWL: ${ENABLE_WEBSITE_FIRECRAWL:-true}
       ENABLE_WEBSITE_WATERCRAWL: ${ENABLE_WEBSITE_WATERCRAWL:-true}
+    # Unique network alias: nginx proxies to `dify-web` instead of the bare
+    # `web`, so this service can never be shadowed by a same-named `web`
+    # service from another Dokploy app sharing `dokploy-network`.
+    networks:
+      default:
+        aliases:
+          - dify-web
 
   # The PostgreSQL database.
   db_postgres:
