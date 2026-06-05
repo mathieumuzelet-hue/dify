@@ -709,12 +709,12 @@ services:
     labels:
       - "traefik.enable=true"
       # ── Routeur HTTPS (production) ────────────────────────────────────────
-      - "traefik.http.routers.dify.rule=Host(`live.apsbot.fr`)"
+      - "traefik.http.routers.dify.rule=Host(`apsbot.fr`)"
       - "traefik.http.routers.dify.entrypoints=websecure"
       - "traefik.http.routers.dify.tls=true"
       - "traefik.http.routers.dify.tls.certresolver=letsencrypt"
       # ── Routeur HTTP → redirection HTTPS ─────────────────────────────────
-      - "traefik.http.routers.dify-http.rule=Host(`live.apsbot.fr`)"
+      - "traefik.http.routers.dify-http.rule=Host(`apsbot.fr`)"
       - "traefik.http.routers.dify-http.entrypoints=web"
       - "traefik.http.routers.dify-http.middlewares=dify-redirect-https"
       - "traefik.http.middlewares.dify-redirect-https.redirectscheme.scheme=https"
