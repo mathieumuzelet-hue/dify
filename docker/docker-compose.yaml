@@ -266,6 +266,7 @@ services:
     networks:
       - ssrf_proxy_network
       - default
+      - shared-net
 
   # WebSocket service for workflow collaboration.
   api_websocket:
@@ -334,6 +335,7 @@ services:
     networks:
       - ssrf_proxy_network
       - default
+      - shared-net
 
   # worker_beat service
   # Celery beat for scheduling periodic tasks.
@@ -551,6 +553,7 @@ services:
     networks:
       - ssrf_proxy_network
       - default
+      - shared-net
     environment:
       DB_DATABASE: ${DB_PLUGIN_DATABASE:-dify_plugin}
       DB_SSL_MODE: ${DB_SSL_MODE:-disable}
@@ -1198,6 +1201,10 @@ networks:
   ssrf_proxy_network:
     driver: bridge
     internal: true
+  # Pre-existing external bridge network shared with the Ollama stack, so the
+  # backend services can reach it at http://ollama:11434 for embeddings.
+  shared-net:
+    external: true
   milvus:
     driver: bridge
   opensearch-net:
