@@ -698,30 +698,9 @@ services:
     depends_on:
       - api
       - web
-    # Dokploy + Traefik : pas de bind de port hôte (Traefik possède 80/443).
-    # nginx reste sur `default` (routage interne api/web) ET rejoint
-    # `dokploy-network` pour être joignable par Traefik.
-    expose:
-      - "80"
-    networks:
-      - default
-      - dokploy-network
-    labels:
-      - "traefik.enable=true"
-      # ── Routeur HTTPS (production) ────────────────────────────────────────
-      - "traefik.http.routers.dify.rule=Host(`apsbot.fr`)"
-      - "traefik.http.routers.dify.entrypoints=websecure"
-      - "traefik.http.routers.dify.tls=true"
-      - "traefik.http.routers.dify.tls.certresolver=letsencrypt"
-      # ── Routeur HTTP → redirection HTTPS ─────────────────────────────────
-      - "traefik.http.routers.dify-http.rule=Host(`apsbot.fr`)"
-      - "traefik.http.routers.dify-http.entrypoints=web"
-      - "traefik.http.routers.dify-http.middlewares=dify-redirect-https"
-      - "traefik.http.middlewares.dify-redirect-https.redirectscheme.scheme=https"
-      - "traefik.http.middlewares.dify-redirect-https.redirectscheme.permanent=true"
-      # ── Service : nginx écoute en interne sur 80 ──────────────────────────
-      - "traefik.http.services.dify.loadbalancer.server.port=80"
-      - "traefik.docker.network=dokploy-network"
+    ports:
+      - "${EXPOSE_NGINX_PORT:-80}:${NGINX_PORT:-80}"
+      - "${EXPOSE_NGINX_SSL_PORT:-443}:${NGINX_SSL_PORT:-443}"
 
   # The Weaviate vector store.
   weaviate:
@@ -1217,9 +1196,6 @@ networks:
   opensearch-net:
     driver: bridge
     internal: true
-  # Réseau partagé avec Traefik, créé automatiquement par Dokploy.
-  dokploy-network:
-    external: true
 
 volumes:
   oradata:
